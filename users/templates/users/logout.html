@@ -1,0 +1,25 @@
+{% extends "blog/base.html" %}
+{% block content %}
+   <h2>You have been logged out.</h2>
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            <a href="{% url 'login' %}">Login again</a>
+        </small>
+    </div>
+    <style>
+a:link, a:visited {
+  background-color: lightorange;
+  color: blue;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: yellow;
+}
+</style>
+    
+          
+{% endblock content %}
