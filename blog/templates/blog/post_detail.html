@@ -1,0 +1,110 @@
+{% extends "blog/base.html" %}
+{% block content %}
+<div class="jumbotron mt-3 shadow-lg">
+<article class="media content-section shadow ">
+   <a href="{{ object.author.profile.image.url }} " target="_blank"> <img src="{{ object.author.profile.image.url }}  " alt="" class="article-img rounded-circle img-thumbnail img-fluid">
+   </a>
+    <div class="media-body">
+      <div class="">
+        <div class="d-flex justify-content-between">
+        <a class="mr-2 mt-0 mb-0  text-dark" href="{% url 'user-posts' object.author.username  %}"><h3>{{ object.author }}</h3></a>
+        <small class="text-muted  text-align-right">{{ object.date_upload }}</small>
+        </div>
+        {% if object.author != user %}
+          <div class="form-group mt-0 pt-0 d-flex justify-content-end">          
+            <a href="{{ object.file.url }}" download class="btn btn-primary flex-last" type="submit"><i class="fas fa-download"></i> Downlaod</a>
+          </div>
+        {% endif %}
+        <hr>
+        {% if object.author == user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'post-update' object.id %}">Update</a>
+            <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'post-delete' object.id %}">Delete</a>
+          </div>
+        {% endif %}
+      </div>
+      <div>
+        {% if object.file %}
+          {% if object.extension == '.jpg' or object.extension == 'jpeg' or object.extension == 'png' %}
+            <a href="{{ object.file.url }}"  download ><img src="{{ object.file.url }}" alt="" class="img-fluid "></a>
+            <a href="{{ object.file.url }}"  download class="text-dark"><h5>{{ object.file }}</h5></a>
+          {% elif object.extension == '.mp4' %}
+            <div class="embed-responsive embed-responsive-16by9">
+              <video id="video-1_html_api" class="vjs-tech" preload="auto" autoplay >
+                <source src="{{ object.file.url }}" type="video/mp4" class="embed-responsive">
+              </video>
+            </div>
+            <a href="{{ object.file.url }}"  download class="text-dark"><h5>{{ object.file }}</h5></a>
+          {% else %}
+            <a href="{{ object.file.url }}"  download class="text-dark"><h5>{{ object.file }}</h5></a>
+          {% endif %}
+        {% endif %}
+      </div>
+      <h2>{{ object.title }}</h2>
+      <p class="article-content">{{ object.content }}</p>
+    </div>
+  </article>
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .jumbotron {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease-in-out;
+    }
+    .jumbotron:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+    }
+    .article-img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+    }
+    .article-metadata {
+        font-size: 0.9rem;
+    }
+    .article-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+    .article-title a {
+        color: #343a40;
+        text-decoration: none;
+        transition: color 0.3s ease-in-out;
+    }
+    .article-title a:hover {
+        color: #007bff;
+    }
+    .article-content {
+        font-size: 1rem;
+        color: #555;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
+    .btn-secondary {
+        background-color: #6c757d;
+        border: none;
+    }
+    .btn-secondary:hover {
+        background-color: #5a6268;
+    }
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+</style>
+   
+{% endblock content %}

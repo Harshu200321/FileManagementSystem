@@ -1,0 +1,155 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cosmo/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+    <link rel="stylesheet" href="{% static 'blog/main.css' %}">
+    {% if title %}
+        <title>File Management - {{ title }}</title>
+    {% else %}
+        <title>File Management</title>
+    {% endif %}
+
+    <style>
+      body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+      }
+      .navbar {
+        background-color: #4a4a4a;
+      }
+      .navbar-brand {
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.5rem;
+        background: linear-gradient(135deg, #ffcc00 0%, #ff9900 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: flex;
+        align-items: center;
+      }
+      .navbar-brand i {
+        margin-right: 10px;
+        font-size: 1.8rem;
+      }
+      .navbar-brand:hover {
+        color: #ffcc00;
+        text-shadow: 0 0 10px rgba(255, 204, 0, 0.7);
+      }
+      .navbar-nav .nav-link {
+        color: #fff;
+        font-weight: bold;
+        background: linear-gradient(135deg, #00ccff 0%, #3366ff 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      .navbar-nav .nav-link:hover {
+        color: #00ccff;
+        text-shadow: 0 0 10px rgba(0, 204, 255, 0.7);
+      }
+      .navbar .form-inline input[type="text"] {
+        border: 1px solid #ffcc00;
+        background-color: #333;
+        color: #ffcc00;
+      }
+      .navbar .form-inline input[type="text"]:focus {
+        background-color: #555;
+        color: #fff;
+      }
+      .navbar .form-inline button {
+        background-color: #ffcc00;
+        border: none;
+        color: #333;
+      }
+      .navbar .form-inline button:hover {
+        background-color: #fff;
+        color: #333;
+      }
+      .container {
+        margin-top: 30px;
+      }
+      .btn-custom {
+        background-color: #ffcc00;
+        color: #333;
+        margin: 5px;
+        border-radius: 20px;
+      }
+      .btn-custom:hover {
+        background-color: #fff;
+        color: #333;
+      }
+      .alert {
+        margin-top: 20px;
+        background-color: #ffcc00;
+        color: #333;
+        border-radius: 20px;
+      }
+      .card {
+        border-radius: 15px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <a class="navbar-brand" href="{% url 'blog-home' %}">
+        <i class="fas fa-file"></i> File Management
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'blog-home' %}"><i class="fas fa-home"></i> Home <span class="sr-only">(current)</span></a>
+          </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0" id="searchform" action="{% url 'search' %}" method="get">
+          <input class="form-control mr-sm-2" type="text" name="q" value="{{ request.GET.q }}" placeholder="Search" />
+          <button class="btn btn-custom my-2 my-sm-0" type="button" onclick="searchform.submit()"><i class="fa fa-search"></i></button>
+        </form>
+        {% if user.is_authenticated %}
+          <a href="{% url 'user-posts' user %}" class="btn btn-custom"><i class="fas fa-user-shield"></i> My Post</a>
+          <a href="{% url 'post-create' %}" class="btn btn-custom"><i class="fas fa-user-edit"></i> New Post</a>
+          <a href="{% url 'profile' %}" class="btn btn-custom"><i class="fas fa-user"></i> {{ user.username }}</a>
+          
+          <!-- Logout Form -->
+          <form id="logout-form" action="{% url 'logout' %}" method="post" style="display: none;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+          </form>
+          <a href="#" class="btn btn-custom" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+            <i class="fas fa-sign-out-alt"></i> Log Out
+          </a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-custom"><i class="fas fa-user-tie"></i> Login</a>
+          <a href="{% url 'register' %}" class="btn btn-custom"><i class="fas fa-sign-in-alt"></i> Sign Up</a>
+        {% endif %}
+      </div>
+    </nav>
+    <div class="container">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}
+      {% endblock %}
+    </div>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="{% static 'blog/main.js' %}"></script>
+  </body>
+</html>
